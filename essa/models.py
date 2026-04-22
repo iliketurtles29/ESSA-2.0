@@ -10,6 +10,8 @@ class Bus(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+
+        
         indexes = [
             models.Index(fields=['bus_location']),
         ]
