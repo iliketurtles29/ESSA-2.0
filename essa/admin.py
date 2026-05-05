@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import Bus, Employee, Allocation
+from .models import Bus, Employee, AllocationTrace
 
 
 @admin.register(Bus)
@@ -18,7 +18,7 @@ class EmployeeAdmin(ModelAdmin):
     list_filter = ('employee_id',)
 
 
-@admin.register(Allocation)
+@admin.register(AllocationTrace)
 class AllocationAdmin(ModelAdmin):
     list_display = ('employee', 'bus', 'allocation_date', 'status')
     search_fields = ('employee__employee_id', 'bus__bus_location')
@@ -30,3 +30,4 @@ class AllocationAdmin(ModelAdmin):
         elif db_field.name == "bus":
             kwargs["queryset"] = Bus.objects.filter(is_active=True).order_by('bus_location')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    

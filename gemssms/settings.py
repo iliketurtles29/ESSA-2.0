@@ -88,10 +88,10 @@ UNFOLD = {
                         "link": "/admin/essa/employee/",
                     },
                     {
-                        "title": "Allocations",
-                        "icon": "assignment",
-                        "link": "/admin/essa/allocation/",
-                    },
+                        "title": "Allocation Traces",
+                        "icon": "assignment_turned_in",
+                        "link": "/admin/essa/allocationtrace/",
+                    }
                 ],
             },
         ],
