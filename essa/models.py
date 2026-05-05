@@ -1,5 +1,6 @@
 from django.db import models, transaction
 
+# ======================================================================================
 
 # Bus model
 class Bus(models.Model):
@@ -10,7 +11,6 @@ class Bus(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-
         
         indexes = [
             models.Index(fields=['bus_location']),
@@ -26,6 +26,7 @@ class Bus(models.Model):
     def __str__(self):
         return f"Bus {self.bus_location} (Remaining: {self.remaining_capacity}/{self.capacity})"
 
+# ======================================================================================
 
 # Employee model
 class Employee(models.Model):
@@ -34,17 +35,35 @@ class Employee(models.Model):
     employee_id = models.CharField(max_length=20, unique=True)
     email = models.EmailField(unique=True, blank=True, null=True)
 
+    class BU(models.TextChoices):
+        ERTI = 'ERTI', 'ERTI'
+        ESPI = 'ESPI', 'ESPI'
+        CREOTEC = 'CREOTEC', 'CREOTEC'
+        CANTEEN = 'CANTEEN', 'CANTEEN'
+        SECURITY = 'SECURITY', 'SECURITY'
+        TOPSEARCH = 'TOPSEARCH', 'TOPSEARCH'
+        IT = 'IT', 'IT'
+        INTERNAL_AUDITOR = 'INTERNAL_AUDITOR', 'INTERNAL_AUDITOR'
+        CORPORATE_AFFAIRS = 'CORPORATE_AFFAIRS', 'CORPORATE_AFFAIRS'
+        HRT = 'HRT', 'HRT'
+
+    BU = models.CharField(max_length=20, choices=BU.choices)
+
+
     class Meta:
         indexes = [
             models.Index(fields=['employee_id']),
         ]
-
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.employee_id})"
 
+# ======================================================================================
+    
+
+# ======================================================================================
 
 # Allocation model
-class Allocation(models.Model):
+class AllocationTrace(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="allocations")
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, related_name="allocations")
     allocation_date = models.DateField()
@@ -84,7 +103,7 @@ class Allocation(models.Model):
 
             else:
                 # Existing allocation — check if the bus changed
-                old_allocation = Allocation.objects.select_for_update().get(pk=self.pk)
+                old_allocation = AllocationTrace.objects.select_for_update().get(pk=self.pk)
 
                 if old_allocation.bus_id != self.bus_id:
                     # Restore capacity on the old bus
@@ -109,3 +128,7 @@ class Allocation(models.Model):
                 bus.remaining_capacity += 1
                 bus.save()
             super().delete(*args, **kwargs)
+
+
+# At the very bottom of models.py (only needed for older Django setups)
+default_app_config = 'essa.apps.YourAppConfig'
